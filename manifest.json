@@ -1,0 +1,121 @@
+{
+  "name": "ametllerintegration",
+  "vendor": "ametllerorigen",
+  "version": "0.1.13",
+  "title": "Ametller Integration",
+  "description": "Global VTEX.io app to handle some required data flows (AOV-108,...)",
+  "mustUpdateAt": "2030-09-19",
+  "registries": [
+    "smartcheckout"
+  ],
+  "settingsSchema": {
+    "title": "Ametller Integration",
+    "description": "Global VTEX.io app to handle some required data flows (AOV-108,...). By Webimpacto.",
+    "type": "object",
+    "properties": {
+      "baluardSetup": {
+        "title": "Baluard options",
+        "type": "object",
+        "properties": {
+          "baluardCheck": {
+            "title": "Use Prod Environment",
+            "type": "boolean"
+          },
+          "baluardAuthDomainsCORS": {
+            "title": "Authorized domains (CORS protection)",
+            "type": "string"
+          },
+          "baluardProdKey": {
+            "title": "Production App Key",
+            "type": "string"
+          },
+          "baluardTestKey": {
+            "title": "Test App Key",
+            "type": "string"
+          },
+          "baluardIDShop": {
+            "title": "Id to set on storeURL",
+            "type": "string"
+          },
+          "sendOrigin": {
+            "title": "Send Origin field",
+            "type": "boolean"
+          }
+        }
+      },
+      "vtexSetup": {
+        "title": "VTEX options",
+        "type": "object",
+        "properties": {
+          "vtexAppKey": {
+            "title": "App Key",
+            "type": "string"
+          },
+          "vtexAppToken": {
+            "title": "App Token",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "required": [
+      "baluardSetup",
+      "vtexSetup"
+    ]
+  },
+  "settingsUiSchema": {
+    "ui:order": [
+      "vtexSetup",
+      "baluardSetup"
+    ],
+    "baluardSetup": {
+      "ui:order": [
+        "baluardCheck",
+        "baluardAuthDomainsCORS",
+        "baluardProdKey",
+        "baluardTestKey",
+        "baluardIDShop",
+        "sendOrigin"
+      ]
+    }
+  },
+  "scripts": {
+    "postreleasy": "vtex publish --public"
+  },
+  "builders": {
+    "node": "3.x",
+    "react": "2.x",
+    "pages": "0.x"
+  },
+  "policies": [
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "{{account}}.vtexcommercestable.com.br",
+        "path": "/api/checkout/pub/orderForm"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.vtex.com",
+        "path": "*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "ca-clients-service.herokuapp.com",
+        "path": "*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "prod-ca-clients.herokuapp.com",
+        "path": "*"
+      }
+    }
+  ],
+  "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
+}
