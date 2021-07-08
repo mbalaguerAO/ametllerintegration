@@ -10,6 +10,7 @@ export const setDefaultHeaders = (res) => {
 export const getDefaultAddress = () => {
     let defaultAddress = {
         "street": "C/Desconocida 1",
+        "street_line_2": "1r 1a",
         "postalCode": "08021",
         "city": "Barcelona",
         "state": "Barcelona",
@@ -49,12 +50,12 @@ export const getAjaxData = async (options) => {
     }
 }
 
-export const luhn_check = (value) => { 
-    return value.split('') .reverse() .map( (x) => parseInt(x, 10) ) .map( (x,idx) => idx % 2 ? x * 2 : x ) .map( (x) => x > 9 ? (x % 10) + 1 : x ) .reduce( (accum, x) => accum += x ) % 10 === 0; 
+export const luhn_check = (value) => {
+    return value.split('') .reverse() .map( (x) => parseInt(x, 10) ) .map( (x,idx) => idx % 2 ? x * 2 : x ) .map( (x) => x > 9 ? (x % 10) + 1 : x ) .reduce( (accum, x) => accum += x ) % 10 === 0;
 }
 
 export const check_isAdult = (year, month, day)  => {
-  
+
   let now = parseInt(new Date().toISOString().slice(0, 10).replace(/-/g, ''));
   let dob = year * 10000 + month * 100 + day * 1; // Coerces strings to integers
 
@@ -66,7 +67,7 @@ export const formatUserToBaluard = (vtexUserData,vtexAddressData,storeId,storeEn
         vtexAddressData = getDefaultAddress()
     }
     let baluardUserData = <any>{}
-    
+
     let birthdayCast="19691201";
     if((typeof vtexUserData.birthDate != "undefined") ){
         if(vtexUserData.birthDate != null){
@@ -80,15 +81,15 @@ export const formatUserToBaluard = (vtexUserData,vtexAddressData,storeId,storeEn
                         isAdult=true;
                     }
                 }
-                if(isAdult){   
+                if(isAdult){
                     birthdayCast=birthday[0].replace(/-/gi,"");
                 }else{
                     birthdayCast="20011201";
-                }    
+                }
             }
-        } 
+        }
     }
-    
+
     baluardUserData = {
         "firstName": vtexUserData.firstName,
         "lastName": vtexUserData.lastName,
@@ -102,6 +103,7 @@ export const formatUserToBaluard = (vtexUserData,vtexAddressData,storeId,storeEn
           "email":  vtexUserData.email,
           "address": {
             "street": vtexAddressData.street,
+            "street_line_2": vtexAddressData.streetNumber + " " + vtexAddressData.complement,
             "zipCode": vtexAddressData.postalCode,
             "city": vtexAddressData.city,
             "province": (vtexAddressData.state ? vtexAddressData.state : 'Barcelona'),
@@ -122,7 +124,7 @@ export const formatUserToBaluard = (vtexUserData,vtexAddressData,storeId,storeEn
             "medium"   : vtexUserData.medium
          }
     }
- 
+
     if(sendOrigin){
         baluardUserData = {
             ...baluardUserData,
@@ -132,7 +134,8 @@ export const formatUserToBaluard = (vtexUserData,vtexAddressData,storeId,storeEn
     if(vtexUserData.claveColectividad && luhn_check(vtexUserData.claveColectividad)){
         baluardUserData['token'] = vtexUserData.claveColectividad
     }
-    
+
+    console.log("MIRIAM TEST");
     console.log(baluardUserData);
     return baluardUserData;
 }
